@@ -1,0 +1,9 @@
+---
+- hosts: srvstack-01
+  become: yes
+  roles:
+    - common
+- hosts: srvstack-02
+  become: yes
+  roles:
+    - common
