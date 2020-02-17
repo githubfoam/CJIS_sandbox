@@ -7,3 +7,8 @@
   become: yes
   roles:
     - common
+- hosts: srvstack-03
+  become: yes
+  roles:
+    - common
+    - RedHatOfficial.rhel8_cjis

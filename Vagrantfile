@@ -65,6 +65,34 @@ Vagrant.configure(2) do |config|
     SHELL
   end
 
+  # customize vagrant instance
+  config.vm.define "srvstack-03" do |dockercluster|
+    dockercluster.vm.box = "bento/centos-8.0"
+    dockercluster.vm.network "private_network", ip: "192.168.1.123"
+    dockercluster.vm.network "forwarded_port", guest: 80, host: 82
+    dockercluster.vm.provider "virtualbox" do |vb|
+      vb.name = "srvstack-03"
+     end
+     dockercluster.vm.provision "ansible_local" do |ansible|
+       ansible.playbook = "deploy.yml"
+       ansible.become = true
+       ansible.compatibility_mode = "2.0"
+       ansible.version = "2.9.3"
+       ansible.galaxy_role_file = "/vagrant/requirements.yml"
+       ansible.galaxy_roles_path = "/etc/ansible/roles"
+       ansible.galaxy_command = "sudo ansible-galaxy install --role-file=%{role_file} --roles-path=%{roles_path} --force"       
+     end
+    dockercluster.vm.provision "shell", inline: <<-SHELL
+    echo "===================================================================================="
+                              hostnamectl status
+    echo "===================================================================================="
+    echo "         \   ^__^                                                                  "
+    echo "          \  (oo)\_______                                                          "
+    echo "             (__)\       )\/\                                                      "
+    echo "                 ||----w |                                                         "
+    echo "                 ||     ||                                                         "
+    SHELL
+  end
 
 
 end
